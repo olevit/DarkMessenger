@@ -1,118 +1,125 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
+import 'react-native-gesture-handler';
 import React from 'react';
-import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
+  Image,
+  Dimensions,
+  Pressable,
+  Animated,
+  TouchableOpacity,
+  TouchableHighlight,
+  Button
 } from 'react-native';
-
 import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+  Logo, ArrowLeft, LockIcon, StopIcon, ChatIcon, AppleIcon, GoogleIcon, LabelIcon, SearchIcon,
+  NotebookIcon, ChatChatsIcon, EditeBoxIcon, SettingsIcon, UsersIcon, UserIcon, UserAddIcon,
+  EditeIcon, CrossIcon, CloseIcon, UserCircle, CameraIcon, AttachmentIcon, MicrophoneIcon,UploadIcon,
+  ChevronRight
+} from './src/Assets/Svg';
+import { Images } from  './src/Assets/Images';
+//import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import OnBoardingWelcome from './src/Screens/OnBoardingWelcome';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Splash from './src/Screens/Splash';
+import OnBoarding from './src/Screens/OnBoarding';
+import SignUpSignIn from './src/Screens/SignUpSignIn';
+import Subscription from './src/Screens/Subscription';
+import Chats from './src/Screens/TabScreens/Chats';
+import NewMessage from './src/Screens/TabScreens/NewMessage';
+import Settings from './src/Screens/TabScreens/Settings';
+import IconsTest from './src/Screens/IconsTest';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
+
+function App() {
+
+const MainNavigator = () => {
+  const insets = useSafeAreaInsets();
+  const TabOptions = (label, iconWhite, iconBlack) => {
+  return {
+    headerShown: false,
+    tabBarLabel:
+      ({ focused }) => (
+        focused ?
+          <Text style={{fontSize: 16, fontWeight: '500', color: 'black'}}>{label}</Text>
+        : <Text style={{fontSize: 16, fontWeight: '500', color: 'white'}}>{label}</Text>
+      ),
+      headerShown: false,
+    tabBarIcon:
+      ({ focused }) => (
+        focused ?
+          iconBlack: iconWhite
+      ),
+  }
 }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const styleTabBar = {
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+    tabBarStyle: {
+      paddingTop: 12,
+      backgroundColor: '#3EB489',
+      height: 91,
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+    }
+  }
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+    <Tab.Navigator
+      afeAreaInsets={{ bottom: insets.bottom }}
+      //screenOptions={
+        //insets.bottom ?
+          //styleTabBar
+        //: { tabBarStyle: { ...styleTabBar.tabBarStyle, paddingBottom: 22}}
+     // }
+      screenOptions={{
+        tabBarStyle:[styleTabBar.tabBarStyle, !insets.bottom && { paddingBottom: 22 }]
+      }}
+    >
+      <Tab.Screen
+        name="Chats"
+        component={Chats}
+        options={ TabOptions('Chats', <ChatChatsIcon/>,<ChatChatsIcon color = 'black'/>) }
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      <Tab.Screen
+        name="NewMessage"
+        component={NewMessage}
+        options={ TabOptions('New message', <EditeBoxIcon/>,<EditeBoxIcon color = 'black'/>) }
+      />
+      <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={ TabOptions('Settings', <SettingsIcon/>, <SettingsIcon color = 'black'/>) }
+      />
+    </Tab.Navigator>
+  );
+}
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false, animation:'slide_from_right'}}>
+        {/*<Stack.Screen name="Icon" component={IconsTest}/>*/}
+        <Stack.Screen name="Splash" component={Splash}/>
+        <Stack.Screen name="OnBoardingWelcome" component = {OnBoardingWelcome}/>
+        <Stack.Screen name='OnBoarding' component={OnBoarding}/>
+        <Stack.Screen name='SignUpSignIn' component={SignUpSignIn}/>
+        <Stack.Screen name='Subscription' component={Subscription}/>
+        <Stack.Screen name='Main' component={MainNavigator}/>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+
 
 export default App;
